@@ -422,12 +422,12 @@ func archiveCmd() {
 			time.Sleep(time.Millisecond * sleepTime)
 		}
 		resp, err := http.Get(url)
-		defer resp.Body.Close()
 		startTime = time.Now()
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		defer resp.Body.Close()
 
 		doc, err := goquery.NewDocumentFromReader(resp.Body)
 		if err != nil {
@@ -440,7 +440,7 @@ func archiveCmd() {
 		contestID := s.ContestID
 		problemID := s.ProblemID
 		epochSecond := s.EpochSecond
-		doc.Find(".linenums").Each(func(i int, gs *goquery.Selection) {
+		doc.Find("#submission-code").Each(func(i int, gs *goquery.Selection) {
 			code := gs.Text()
 			if code == "" {
 				log.Print("Empty string...")
